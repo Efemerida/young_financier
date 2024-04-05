@@ -18,18 +18,24 @@ class _ExerciseMap extends State<ExerciseMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: InkWell(
-          child: CustomPaint(
-            size: Size(20, 20),
-            painter: CirclePainter(),
-            child: Text("type me"),
-          ),
-        )
-    );
+    return InkWell(
+      onTap: prr,
+        child:Container(padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
+            child:CustomPaint(
+              size: const Size(1, 1),
+              painter: CirclePainter(),
+              child: const Text(
+                  textAlign: TextAlign.center,
+                  "type me"),
+            )
+    )
+      );
   }
 }
 
+void prr(){
+  print("tap");
+}
 
 
 
