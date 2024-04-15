@@ -20,15 +20,34 @@ class _ExerciseMap extends State<ExerciseMap> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: prr,
-        child:Container(padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-            child:CustomPaint(
-              size: const Size(1, 1),
-              painter: CirclePainter(),
-              child: const Text(
-                  textAlign: TextAlign.center,
-                  "type me"),
+        child: Row(
+          children: [
+            Container(
+                padding: EdgeInsets.fromLTRB(30, 30, 0, 30),
+              child:CustomPaint(
+                size: const Size(1, 1),
+                painter: CirclePainterGreen(),
+                  child:
+                  CustomPaint(
+                    size: Size(1,1),
+                    painter: CirclePainterWhite(),
+                  )
+
+              )
+          ),
+            Container(
+            padding: EdgeInsets.fromLTRB(40, 15, 0, 15),
+            child: Column(
+              children: [
+                Text("Урок 1",
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.black54
+                ),),
+                Text("Акции")])
             )
-    )
+          ]
+        )
       );
   }
 }
@@ -41,16 +60,30 @@ void prr(){
 
 
 
-class CirclePainter extends CustomPainter {
+class CirclePainterGreen extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = Colors.teal
+      ..color = Colors.green
       ..strokeWidth = 15;
-
     Offset center = Offset(size.width / 2, size.height / 2);
+    canvas.drawCircle(center, 20, paint);
+  }
 
-    canvas.drawCircle(center, 30, paint);
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class CirclePainterWhite extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 15;
+    Offset center = Offset(size.width / 2, size.height / 2);
+    canvas.drawCircle(center, 15, paint);
   }
 
   @override

@@ -64,21 +64,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _navigateBottomBar,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: "home"
+              label: "Главная"
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              label: "profile")
+              label: "Профиль")
         ],
       ),
       body:
