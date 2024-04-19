@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:young_financier/pages/home_screen/home_screen.dart';
 import 'package:young_financier/pages/map_page.dart';
 import 'package:young_financier/pages/profile_page.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('name_box');
   runApp(const MyApp());
 }
 
@@ -42,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List _pages =[
 
-    MapPage(),
+    HomeScreen(),
 
     ProfilePage()
 

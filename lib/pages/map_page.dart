@@ -32,9 +32,6 @@ class MapPage extends StatelessWidget{
       )
     );
   }
-  void _someFuction() {
-
-  }
 }
 
 

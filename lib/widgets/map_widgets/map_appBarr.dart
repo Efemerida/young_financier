@@ -10,19 +10,14 @@ class MapAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
 
-    Future<String?> name =  nameBox.getName();
     return
       Container(
           color: Colors.grey,
           padding: EdgeInsets.all(10),
           alignment: Alignment.bottomLeft,
           child:
-          Row(
+          const Row(
           children: [
-            Row(
-              children: [
-              Text(name.toString()),
-            ]),
             Padding(
                 padding: EdgeInsets.fromLTRB(120, 0, 0, 0),
                 child:Row(
@@ -37,7 +32,6 @@ class MapAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(50);
 
 }
