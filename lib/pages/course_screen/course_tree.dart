@@ -26,7 +26,7 @@ class CourseTree extends StatefulWidget{
 class _CourseTree extends State<CourseTree> {
 
   late LessonDatabaseHelper lessonDb;
-  late List<Lesson> lessons;
+  List<Lesson>? lessons = null;
 
   @override
   void initState() {
@@ -39,8 +39,8 @@ class _CourseTree extends State<CourseTree> {
       lessonDb.insertLesson(Lesson(name: "Введение", complete: 0, picture: bytes.buffer.asUint8List()));
       lessons = await lessonDb.selectLessons();
       lessonDb.insertLessonQuestion(LessonQuestion(question:"Вопрос", answer1:"Ответ1",
-          answer2:"Ответ2", answer3:"Ответ3", answer4:"Ответ4", numCorrect:2, lesson_id:lessons[0].id!));
-      List ques = await lessonDb.selectLessonQuestionById(lessons[0].id!);
+          answer2:"Ответ2", answer3:"Ответ3", answer4:"Ответ4", numCorrect:2, lesson_id:lessons![0].id!));
+      List ques = await lessonDb.selectLessonQuestionById(lessons![0].id!);
       print((ques[0] as LessonQuestion).question);
       setState(() {});
     });
@@ -51,14 +51,14 @@ class _CourseTree extends State<CourseTree> {
     return FutureBuilder(
         future: this.lessonDb.selectLessons(),
         builder: (BuildContext context, AsyncSnapshot<List<Lesson>> snapshot){
-    if (snapshot.hasData) {
+    if (snapshot.hasData && lessons!=null) {
       print(snapshot.data?[0].id);
       return ListView.builder(
           itemCount: snapshot.data?.length,
           itemBuilder: (context, position) {
             return Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: CourseNode(
-              id: lessons[0].id!,
+              id: lessons![0].id!,
               snapshot.data![position].name,
               image: snapshot.data![position].picture,
               color: const Color(0xFFCE82FF),
