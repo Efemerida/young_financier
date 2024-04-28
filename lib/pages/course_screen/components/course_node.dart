@@ -11,11 +11,12 @@ class CourseNode extends StatelessWidget {
   final String name;
   Uint8List? image;
   Color? color;
+  int isComplete;
   int id;
 
 
   CourseNode(this.name,
-      {this.image, this.color, required this.id, Key? key})
+      {this.image, this.color, required this.id, required this.isComplete, Key? key})
       : super(key: key);
 
   @override
@@ -69,7 +70,7 @@ class CourseNode extends StatelessWidget {
         percent: 1,
         circularStrokeCap: CircularStrokeCap.round,
         progressColor: const Color(0xc0c0c0),
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: isComplete == 1? Color(0xFF737373) : Color(0x737373FF),
       ),
     );
   }

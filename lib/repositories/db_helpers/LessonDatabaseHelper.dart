@@ -73,6 +73,11 @@ class LessonDatabaseHelper {
         .toList();
   }
 
+  Future<Lesson> selectLessonById(int id) async {
+    List<Map<String, Object?>> list = await db.rawQuery('select * from lessons where id = $id');
+    return Lesson.fromMap(list.first);
+  }
+
   Future<List<LessonQuestion>> selectLessonQuestionById(int id) async {
     List<Map<String, Object?>> list = await db.rawQuery('select * from lesson_questions where lesson_id = $id');
     return list
@@ -84,4 +89,7 @@ class LessonDatabaseHelper {
     db.rawDelete("delete from lessons");
   }
 
+  Future<void> completeLesson(Lesson lesson) async{
+    db.update("lessons", lesson.toMap());
+  }
 }

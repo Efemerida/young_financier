@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:young_financier/models/Lesson.dart';
 import 'package:young_financier/models/LessonQuestion.dart';
 import 'package:young_financier/repositories/db_helpers/LessonDatabaseHelper.dart';
 
@@ -30,6 +31,7 @@ class LessonScreenState extends State<LessonScreen> {
 
   late List<LessonQuestion> questions;
   late List<ListLesson> lessons;
+  List<int> countPage = [];
 
 
   LessonScreenState({required this.id});
@@ -43,22 +45,25 @@ class LessonScreenState extends State<LessonScreen> {
     lessonDb = LessonDatabaseHelper();
     lessonDb.initDB().whenComplete(() async {
       questions = await lessonDb.selectLessonQuestionById(id);
+      lessons = [ListLesson(lessonQuestion: questions[0],
+          checkButton: bottomButton(context, 'CHECK', 0)),
+        ListLesson(lessonQuestion: questions[1],
+            checkButton: bottomButton(context, 'CHECK', 1)),
+        ListLesson(lessonQuestion: questions[0],
+            checkButton: bottomButton(context, 'CHECK', 2)),
+        ListLesson(lessonQuestion: questions[0],
+            checkButton: bottomButton(context, 'CHECK', 3))];
       setState(() {});
+
     });
+
   }
 
 
 
   @override
   Widget build(BuildContext context) {
-    lessons = [ListLesson(lessonQuestion: questions[0],
-        checkButton: bottomButton(context, 'CHECK', 0)),
-    ListLesson(lessonQuestion: questions[0],
-    checkButton: bottomButton(context, 'CHECK', 1)),
-    ListLesson(lessonQuestion: questions[0],
-    checkButton: bottomButton(context, 'CHECK', 2)),
-    ListLesson(lessonQuestion: questions[0],
-    checkButton: bottomButton(context, 'CHECK', 3))];
+
 
     return Scaffold(
       appBar: LessonAppBar(percent: percent),
@@ -74,28 +79,46 @@ class LessonScreenState extends State<LessonScreen> {
         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: ElevatedButton(
           onPressed: () {
+            ListLesson.currentAns = 0;
             setState(() {
               if(ListLesson.currentAns==questions[0].numCorrect){
-                lessons.removeAt(pos);
-                percent += 0.2;
-                index++;
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return dialog('Great job', true);
-                  },
-                );
+                if(lessons.length==1){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return dialog('Good work bro', true, true);
+                    },
+                  );
+                }
+                else {
+                  lessons.removeAt(0);
+                  percent += 0.2;
+                  lessonDb.selectLessonById(id).whenComplete(() async {
+                    Lesson ls = await lessonDb.selectLessonById(id);
+                    ls.complete = 1;
+                    lessonDb.completeLesson(ls);
+                    setState(() {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return dialog('Great job', true, false);
+                        },
+                      );
+                    });
+                  });
+                }
               }
               else{
-                index++;
+                ListLesson tmp = lessons[0];
+                lessons.removeAt(0);
+                lessons.add(tmp);
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return dialog('baaad', false);
+                    return dialog('baaad', false, false);
                   },
                 );
               }
-              if(index==lessons.length) index = 0;
             });
           },
           child: Text(
@@ -118,37 +141,39 @@ class LessonScreenState extends State<LessonScreen> {
     );
   }
 
-  dialog(String title, bool isGood) {
-    int color = 0xFFd7ffb8;
-    if(!isGood) color = 0xFF7276;
+  dialog(String title, bool isGood, bool isFinal) {
+    Color color = Color(0xFFd7ffb8);
+    if(!isGood) color = Color(0xffe37676);
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
         height: 120,
         width: double.infinity,
-        decoration: BoxDecoration(color: Color(color)),
+        decoration: BoxDecoration(color: color),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            dialogTitle(title),
-            BottomButton(isGood: isGood, context, title: 'CONTINUE'),
+            dialogTitle(title, isGood),
+            BottomButton(isGood: isGood, context, title: 'CONTINUE', isFinal: isFinal,),
           ],
         ),
       ),
     );
   }
 
-  dialogTitle(String text) {
+  dialogTitle(String text, bool isGood) {
+    Color color = Color(0xFF43C000);
+    if(!isGood) color = Color(0xffe50517);
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(top: 15),
         padding: const EdgeInsets.only(left: 15),
         child: DefaultTextStyle(
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF43C000),
+            color: color,
           ),
           child: Text(text),
         ),

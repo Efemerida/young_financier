@@ -40,8 +40,9 @@ class _CourseTree extends State<CourseTree> {
       lessons = await lessonDb.selectLessons();
       lessonDb.insertLessonQuestion(LessonQuestion(question:"Вопрос", answer1:"Ответ1",
           answer2:"Ответ2", answer3:"Ответ3", answer4:"Ответ4", numCorrect:2, lesson_id:lessons![0].id!));
+      lessonDb.insertLessonQuestion(LessonQuestion(question:"Вопрос222", answer1:"Ответ1",
+          answer2:"Ответ2", answer3:"Ответ3", answer4:"Ответ4", numCorrect:2, lesson_id:lessons![0].id!));
       List ques = await lessonDb.selectLessonQuestionById(lessons![0].id!);
-      print((ques[0] as LessonQuestion).question);
       setState(() {});
     });
   }
@@ -52,16 +53,18 @@ class _CourseTree extends State<CourseTree> {
         future: this.lessonDb.selectLessons(),
         builder: (BuildContext context, AsyncSnapshot<List<Lesson>> snapshot){
     if (snapshot.hasData && lessons!=null) {
-      print(snapshot.data?[0].id);
+      print("object");
+      print(snapshot.data?[0].complete);
       return ListView.builder(
           itemCount: snapshot.data?.length,
           itemBuilder: (context, position) {
             return Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: CourseNode(
-              id: lessons![0].id!,
+              id: lessons![position].id!,
               snapshot.data![position].name,
               image: snapshot.data![position].picture,
-              color: const Color(0xFFCE82FF),
+              isComplete:snapshot.data![position].complete,
+              color: snapshot.data![position].complete==1? Color(0xFF12AB1B) : Color(0xFFCE82FF),
             ));
           });
     }

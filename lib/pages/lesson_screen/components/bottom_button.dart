@@ -4,12 +4,13 @@ class BottomButton extends StatelessWidget {
   final BuildContext context;
   final String title;
   final bool isGood;
-  const BottomButton(this.context, {required this.isGood, required this.title, Key? key}) : super(key: key);
+  final bool isFinal;
+  BottomButton(this.context, {required this.isGood, required this.title, required this.isFinal, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int color = 0xFF58CC02;
-    if(!isGood) color = 0xFF0000;
+    Color color = Color(0xFF43C000);
+    if(!isGood) color = Color(0xffe50517);
     return Center(
       child: Container(
         width: double.infinity,
@@ -17,7 +18,13 @@ class BottomButton extends StatelessWidget {
         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pop(context);
+            if(isFinal){
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }
+            else{
+              Navigator.pop(context);
+            }
           },
           child: Text(
             title,
@@ -28,7 +35,7 @@ class BottomButton extends StatelessWidget {
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(color),
+            backgroundColor: color,
             elevation: 5,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
