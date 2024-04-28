@@ -3,6 +3,7 @@ import 'package:young_financier/models/LessonQuestion.dart';
 import 'package:young_financier/repositories/db_helpers/LessonDatabaseHelper.dart';
 
 import 'components/bottom_button.dart';
+import 'components/final_bottom_button.dart';
 import 'components/grid_lesson.dart';
 import 'components/lesson_app_bar.dart';
 import 'components/list_lesson.dart';
@@ -28,6 +29,8 @@ class LessonScreenState extends State<LessonScreen> {
 
 
   late List<LessonQuestion> questions;
+  late List<ListLesson> lessons;
+
 
   LessonScreenState({required this.id});
 
@@ -46,21 +49,16 @@ class LessonScreenState extends State<LessonScreen> {
 
 
 
-
-
   @override
   Widget build(BuildContext context) {
-    var lessons = [
-      GridLesson(checkButton: bottomButton(context, 'CHECK')),
-      ListLesson(lessonQuestion: questions[0],
-          checkButton: bottomButton(context, 'CHECK')),
-      ListLesson(lessonQuestion: questions[0],
-          checkButton: bottomButton(context, 'CHECK')),
-      ListLesson(lessonQuestion: questions[0],
-          checkButton: bottomButton(context, 'CHECK')),
-      ListLesson(lessonQuestion: questions[0],
-          checkButton: bottomButton(context, 'CHECK')),
-    ];
+    lessons = [ListLesson(lessonQuestion: questions[0],
+        checkButton: bottomButton(context, 'CHECK', 0)),
+    ListLesson(lessonQuestion: questions[0],
+    checkButton: bottomButton(context, 'CHECK', 1)),
+    ListLesson(lessonQuestion: questions[0],
+    checkButton: bottomButton(context, 'CHECK', 2)),
+    ListLesson(lessonQuestion: questions[0],
+    checkButton: bottomButton(context, 'CHECK', 3))];
 
     return Scaffold(
       appBar: LessonAppBar(percent: percent),
@@ -68,7 +66,7 @@ class LessonScreenState extends State<LessonScreen> {
     );
   }
 
-  bottomButton(BuildContext context, String title) {
+  bottomButton(BuildContext context, String title, int pos) {
     return Center(
       child: Container(
         width: double.infinity,
@@ -77,17 +75,27 @@ class LessonScreenState extends State<LessonScreen> {
         child: ElevatedButton(
           onPressed: () {
             setState(() {
-              if (percent < 1) {
+              if(ListLesson.currentAns==questions[0].numCorrect){
+                lessons.removeAt(pos);
                 percent += 0.2;
                 index++;
-              } else {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return dialog('Great job');
+                    return dialog('Great job', true);
                   },
                 );
               }
+              else{
+                index++;
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return dialog('baaad', false);
+                  },
+                );
+              }
+              if(index==lessons.length) index = 0;
             });
           },
           child: Text(
@@ -110,18 +118,20 @@ class LessonScreenState extends State<LessonScreen> {
     );
   }
 
-  dialog(String title) {
+  dialog(String title, bool isGood) {
+    int color = 0xFFd7ffb8;
+    if(!isGood) color = 0xFF7276;
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
         height: 120,
         width: double.infinity,
-        decoration: const BoxDecoration(color: Color(0xFFd7ffb8)),
+        decoration: BoxDecoration(color: Color(color)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             dialogTitle(title),
-            BottomButton(context, title: 'CONTINUE'),
+            BottomButton(isGood: isGood, context, title: 'CONTINUE'),
           ],
         ),
       ),

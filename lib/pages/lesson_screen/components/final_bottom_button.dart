@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
-class BottomButton extends StatelessWidget {
+class FinalBottomButton extends StatelessWidget {
   final BuildContext context;
   final String title;
-  final bool isGood;
-  const BottomButton(this.context, {required this.isGood, required this.title, Key? key}) : super(key: key);
+  const FinalBottomButton(this.context, {required this.title, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int color = 0xFF58CC02;
-    if(!isGood) color = 0xFF0000;
     return Center(
       child: Container(
         width: double.infinity,
@@ -17,6 +14,7 @@ class BottomButton extends StatelessWidget {
         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: ElevatedButton(
           onPressed: () {
+            Navigator.pop(context);
             Navigator.pop(context);
           },
           child: Text(
@@ -28,7 +26,7 @@ class BottomButton extends StatelessWidget {
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(color),
+            backgroundColor: const Color(0xFF58CC02),
             elevation: 5,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
