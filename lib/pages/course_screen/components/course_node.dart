@@ -70,7 +70,7 @@ class CourseNode extends StatelessWidget {
         percent: 1,
         circularStrokeCap: CircularStrokeCap.round,
         progressColor: const Color(0xc0c0c0),
-        backgroundColor: isComplete == 1? Color(0xFF737373) : Color(0x737373FF),
+        backgroundColor: isComplete == 1? Color(0xFF12AB1B) : Color(0x737373FF),
       ),
     );
   }

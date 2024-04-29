@@ -3,14 +3,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:young_financier/models/Lesson.dart';
 import 'package:young_financier/models/LessonQuestion.dart';
 import 'package:young_financier/repositories/db_helpers/LessonDatabaseHelper.dart';
 
 import 'components/course_node.dart';
-import 'components/double_course_node.dart';
-import 'components/triple_course_node.dart';
+
 
 
 class CourseTree extends StatefulWidget{
@@ -28,23 +26,238 @@ class _CourseTree extends State<CourseTree> {
   late LessonDatabaseHelper lessonDb;
   List<Lesson>? lessons = null;
 
-  @override
-  void initState() {
-    super.initState();
+
+
+  void initData(){
     this.lessonDb = LessonDatabaseHelper();
     this.lessonDb.initDB().whenComplete(() async {
       // await lessonDb.dropDB();
-      await lessonDb.deleteAllData();
-      ByteData bytes = await rootBundle.load("assets/images/egg.png");
-      lessonDb.insertLesson(Lesson(name: "Введение", complete: 0, picture: bytes.buffer.asUint8List()));
       lessons = await lessonDb.selectLessons();
-      lessonDb.insertLessonQuestion(LessonQuestion(question:"Вопрос", answer1:"Ответ1",
-          answer2:"Ответ2", answer3:"Ответ3", answer4:"Ответ4", numCorrect:2, lesson_id:lessons![0].id!));
-      lessonDb.insertLessonQuestion(LessonQuestion(question:"Вопрос222", answer1:"Ответ1",
-          answer2:"Ответ2", answer3:"Ответ3", answer4:"Ответ4", numCorrect:2, lesson_id:lessons![0].id!));
-      List ques = await lessonDb.selectLessonQuestionById(lessons![0].id!);
+      if(lessons==null) {
+        ByteData bytes1 = await rootBundle.load("assets/images/intro.png");
+        lessonDb.insertLesson(Lesson(name: "Введение",
+            complete: 0,
+            picture: bytes1.buffer.asUint8List()));
+
+        lessons = await lessonDb.selectLessons();
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое деньги?",
+            answer1: "Бумажные купюры",
+            answer2: "Монеты",
+            answer3: "Все вышеперечисленное",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![0].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что можно купить на деньги?",
+            answer1: "Еду",
+            answer2: "Игрушки",
+            answer3: "Оба варианта",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![0].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое сбережения?",
+            answer1: "Деньги, которые ты тратишь",
+            answer2: "Деньги, которые ты хранишь",
+            answer3: "Деньги, которые ты зарабатываешь",
+            answer4: "Ответ4",
+            numCorrect: 2,
+            lesson_id: lessons![0].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Почему важно тратить деньги с умом?",
+            answer1: "Чтобы у тебя было больше денег",
+            answer2: "Чтобы не попасть в долги",
+            answer3: "Все вышеперечисленное",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![0].id!));
+
+
+        ByteData bytes2 = await rootBundle.load("assets/images/money.png");
+        lessonDb.insertLesson(Lesson(name: "Финансы",
+            complete: 0,
+            picture: bytes2.buffer.asUint8List()));
+
+        lessons = await lessonDb.selectLessons();
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Почему важно быть финансово грамотным?",
+            answer1: "Чтобы принимать правильные решения о своих деньгах",
+            answer2: "Чтобы избежать финансовых проблем",
+            answer3: "Оба варианта",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![1].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое финансовая цель?",
+            answer1: "То, чего ты хочешь достичь со своими деньгами",
+            answer2: "То, на что ты тратишь свои деньги",
+            answer3: "То, сколько денег у тебя есть",
+            answer4: "Ответ4",
+            numCorrect: 1,
+            lesson_id: lessons![1].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Почему важно планировать своё финансовое будущее?",
+            answer1: "Чтобы у тебя было достаточно денег на пенсии",
+            answer2: "Чтобы ты мог достичь своих финансовых целей",
+            answer3: "Оба варианта",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![1].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое потребности?",
+            answer1: "Вещи, которые тебе нужны для выживания",
+            answer2: "Вещи, которые ты хочешь, но не нуждаешься в них",
+            answer3: "Оба варианта",
+            answer4: "Ответ4",
+            numCorrect: 1,
+            lesson_id: lessons![1].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое желания?",
+            answer1: "Вещи, которые тебе нужны для выживания",
+            answer2: "Вещи, которые ты хочешь, но не нуждаешься в них",
+            answer3: "Оба варианта",
+            answer4: "Ответ4",
+            numCorrect: 2,
+            lesson_id: lessons![1].id!));
+
+
+        ByteData bytes3 = await rootBundle.load("assets/images/bank.png");
+        lessonDb.insertLesson(Lesson(
+            name: "Банк", complete: 0, picture: bytes3.buffer.asUint8List()));
+
+        lessons = await lessonDb.selectLessons();
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое банк?",
+            answer1: "Место, где хранят деньги",
+            answer2: "Магазин, где продают еду",
+            answer3: "Школа, где учатся дети",
+            answer4: "Ответ4",
+            numCorrect: 1,
+            lesson_id: lessons![2].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Почему важно хранить деньги в банке?",
+            answer1: "Чтобы они были в безопасности",
+            answer2: "Чтобы купить игрушки",
+            answer3: "Чтобы подружиться",
+            answer4: "Ответ4",
+            numCorrect: 1,
+            lesson_id: lessons![2].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Как называется человек, который работает в банке?",
+            answer1: "Доктор",
+            answer2: "Кассир",
+            answer3: "Учитель",
+            answer4: "Ответ4",
+            numCorrect: 2,
+            lesson_id: lessons![2].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что можно делать в банке?",
+            answer1: "Снимать деньги",
+            answer2: "Положить деньги",
+            answer3: "И то, и другое",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![2].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Чем пользуются люди, чтобы снять деньги в банке?",
+            answer1: "Банковской картой",
+            answer2: "Паспортом",
+            answer3: "Оба варианта",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![2].id!));
+
+
+        ByteData bytes4 = await rootBundle.load("assets/images/saving.png");
+        lessonDb.insertLesson(Lesson(
+            name: "Вклады", complete: 0, picture: bytes4.buffer.asUint8List()));
+
+        lessons = await lessonDb.selectLessons();
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое вклад?",
+            answer1: "Деньги, которые ты даешь банку",
+            answer2: "Деньги, которые банк дает тебе",
+            answer3: "Деньги, которые ты хранишь в кармане",
+            answer4: "Ответ4",
+            numCorrect: 1,
+            lesson_id: lessons![3].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Для чего можно использовать вклады?",
+            answer1: "Купить игрушки",
+            answer2: "Сберечь деньги на будущее",
+            answer3: "Потратить на конфеты",
+            answer4: "Ответ4",
+            numCorrect: 1,
+            lesson_id: lessons![3].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что происходит с деньгами, которые ты вносишь на вклад?",
+            answer1: "Банк хранит их в сейфе",
+            answer2: "Банк использует их для помощи другим людям",
+            answer3: "Банк тратит их на свои нужды",
+            answer4: "Ответ4",
+            numCorrect: 2,
+            lesson_id: lessons![3].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Какая часть твоего вклада растет со временем?",
+            answer1: "Вся сумма",
+            answer2: "Только часть, которую ты внес",
+            answer3: "Ничего",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![3].id!));
+
+
+        ByteData bytes5 = await rootBundle.load("assets/images/get.png");
+        lessonDb.insertLesson(Lesson(
+            name: "Кредит", complete: 0, picture: bytes5.buffer.asUint8List()));
+
+        lessons = await lessonDb.selectLessons();
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое кредит?",
+            answer1: "Деньги, которые ты даешь банку",
+            answer2: "Деньги, которые банк дает тебе",
+            answer3: "Деньги, которые ты хранишь в кармане",
+            answer4: "Ответ4",
+            numCorrect: 2,
+            lesson_id: lessons![4].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Для чего можно использовать кредиты?",
+            answer1: "Купить дом",
+            answer2: "Сходить в кино",
+            answer3: "Купить леденец",
+            answer4: "Ответ4",
+            numCorrect: 1,
+            lesson_id: lessons![4].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что нужно сделать, чтобы получить кредит?",
+            answer1: "Попросить у банка",
+            answer2: "Написать письмо",
+            answer3: "Собрать все свои сбережения",
+            answer4: "Ответ4",
+            numCorrect: 1,
+            lesson_id: lessons![4].id!));
+        lessonDb.insertLessonQuestion(LessonQuestion(
+            question: "Что такое процентная ставка по кредиту?",
+            answer3: "Сколько денег ты должен заплатить банку за пользование кредитом",
+            answer2: "Сколько денег банк дает тебе взаймы",
+            answer1: "Скорость, с которой растет твой долг",
+            answer4: "Ответ4",
+            numCorrect: 3,
+            lesson_id: lessons![4].id!));
+      }
       setState(() {});
     });
+
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    initData();
+
   }
 
   @override
@@ -53,8 +266,6 @@ class _CourseTree extends State<CourseTree> {
         future: this.lessonDb.selectLessons(),
         builder: (BuildContext context, AsyncSnapshot<List<Lesson>> snapshot){
     if (snapshot.hasData && lessons!=null) {
-      print("object");
-      print(snapshot.data?[0].complete);
       return ListView.builder(
           itemCount: snapshot.data?.length,
           itemBuilder: (context, position) {
@@ -73,91 +284,5 @@ class _CourseTree extends State<CourseTree> {
     }
 
         });
-
-    //   SingleChildScrollView(
-    //   child: Column(
-    //     children: [
-    //       const Padding(padding: EdgeInsets.all(10)),
-    //       CourseNode(
-    //         'Basic',
-    //         crown: 1,
-    //       ),
-    //       const Padding(padding: EdgeInsets.all(10)),
-    //       DoubleCourseNode(
-    //         CourseNode(
-    //           'Greetings',
-    //           image: 'assets/images/hand.png',
-    //           color: Colors.yellow,
-    //           percent: 0.5,
-    //           crown: 1,
-    //         ),
-    //         CourseNode(
-    //           'Introduction',
-    //           image: 'assets/images/pen.png',
-    //           color: const Color(0xFFCE82FF),
-    //           crown: 2,
-    //         ),
-    //       ),
-    //       const Padding(padding: EdgeInsets.all(10)),
-    //       DoubleCourseNode(
-    //         CourseNode(
-    //           'Animals',
-    //           image: 'assets/images/fish.png',
-    //           color: Colors.green,
-    //           percent: 0.2,
-    //           crown: 3,
-    //         ),
-    //         CourseNode(
-    //           'Colors',
-    //           image: 'assets/images/bucket.png',
-    //           color: Colors.blue,
-    //           crown: 1,
-    //         ),
-    //       ),
-    //       const Padding(padding: EdgeInsets.all(10)),
-    //       CourseNode(
-    //         'Sentence',
-    //         image: 'assets/images/bandages.png',
-    //         color: Colors.redAccent,
-    //         crown: 4,
-    //       ),
-    //       const Padding(padding: EdgeInsets.all(10)),
-    //       TripleCourseNode(
-    //         CourseNode(
-    //           'Clothing',
-    //           image: 'assets/images/heel.png',
-    //           color: Colors.yellow.shade500,
-    //         ),
-    //         CourseNode(
-    //           'Tools',
-    //           image: 'assets/images/hammer.png',
-    //           color: Colors.grey,
-    //           percent: 0.7,
-    //         ),
-    //         CourseNode(
-    //           'Emotions',
-    //           image: 'assets/images/emotion.png',
-    //           color: Colors.blue,
-    //           crown: 2,
-    //         ),
-    //       ),
-    //       const Padding(padding: EdgeInsets.all(10)),
-    //       DoubleCourseNode(
-    //         CourseNode(
-    //           'Daily',
-    //           image: 'assets/images/dumbbell.png',
-    //           color: Colors.purple.shade200,
-    //           percent: 0.2,
-    //         ),
-    //         CourseNode(
-    //           'Travel',
-    //           image: 'assets/images/tree.png',
-    //           color: Colors.pink,
-    //         ),
-    //       ),
-    //       const Padding(padding: EdgeInsets.only(bottom: 15)),
-    //     ],
-    //   ),
-    // );
   }
 }

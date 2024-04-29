@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:young_financier/models/Lesson.dart';
 import 'package:young_financier/models/LessonQuestion.dart';
 import 'package:young_financier/repositories/db_helpers/LessonDatabaseHelper.dart';
@@ -26,11 +28,11 @@ class LessonScreenState extends State<LessonScreen> {
   int index = 0;
   late LessonDatabaseHelper lessonDb;
   int id;
-  int countCorrect = 0;
+  double countCorrect = 0;
 
 
   late List<LessonQuestion> questions;
-  late List<ListLesson> lessons;
+  late List<ListLesson> lessons = [];
   List<int> countPage = [];
 
 
@@ -45,14 +47,12 @@ class LessonScreenState extends State<LessonScreen> {
     lessonDb = LessonDatabaseHelper();
     lessonDb.initDB().whenComplete(() async {
       questions = await lessonDb.selectLessonQuestionById(id);
-      lessons = [ListLesson(lessonQuestion: questions[0],
-          checkButton: bottomButton(context, 'CHECK', 0)),
-        ListLesson(lessonQuestion: questions[1],
-            checkButton: bottomButton(context, 'CHECK', 1)),
-        ListLesson(lessonQuestion: questions[0],
-            checkButton: bottomButton(context, 'CHECK', 2)),
-        ListLesson(lessonQuestion: questions[0],
-            checkButton: bottomButton(context, 'CHECK', 3))];
+
+      for(int i = 0; i < questions.length; i++){
+        lessons.add(ListLesson(lessonQuestion: questions[i],
+            checkButton: bottomButton(context, 'Проверить', i)));
+      }
+      countCorrect = 0.8/lessons.length;
       setState(() {});
 
     });
@@ -79,47 +79,75 @@ class LessonScreenState extends State<LessonScreen> {
         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: ElevatedButton(
           onPressed: () {
-            ListLesson.currentAns = 0;
-            setState(() {
-              if(ListLesson.currentAns==questions[0].numCorrect){
-                if(lessons.length==1){
+            if(ListLesson.currentAns!=0) {
+              setState(() {
+                if (ListLesson.currentAns == questions[pos].numCorrect) {
+                  if (lessons.length == 1) {
+
+                    Box box = Hive.box("name_box");
+                    DateTime? date = box.get("date");
+                    if(date==null) {
+                      box.put("date", DateTime.now());
+                      box.put("count", 1);
+                    }
+                    else{
+                      if(date.difference(DateTime.now()).inDays < 2 && date.difference(DateTime.now()).inDays > 1){
+                        box.put("date", DateTime.now());
+                        int count = box.get("count");
+                        count+=1;
+                        box.put("count", count);
+
+
+                      }
+                      else if(date.difference(DateTime.now()).inDays > 2){
+                        box.put("date", DateTime.now());
+                        box.put("count", 1);
+                      }
+                    }
+
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return dialog('Ты хорошо поработал!', true, true);
+                      },
+                    );
+                  }
+                  else {
+                    lessons.removeAt(0);
+                    print(countCorrect);
+                    percent += countCorrect;
+                    lessonDb.selectLessonById(id).whenComplete(() async {
+                      Lesson ls = await lessonDb.selectLessonById(id);
+                      ls.complete = 1;
+                      ByteData bytes = await rootBundle.load("assets/images/ant.png");
+                      ls.picture = bytes.buffer.asUint8List();
+                      lessonDb.completeLesson(ls);
+                      setState(() {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return dialog('Правильно!', true, false);
+                          },
+                        );
+                      });
+                    });
+                  }
+                }
+                else {
+                  ListLesson tmp = lessons[0];
+                  lessons.removeAt(0);
+                  lessons.add(tmp);
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return dialog('Good work bro', true, true);
+                      return dialog('Ошибка(', false, false);
                     },
                   );
                 }
-                else {
-                  lessons.removeAt(0);
-                  percent += 0.2;
-                  lessonDb.selectLessonById(id).whenComplete(() async {
-                    Lesson ls = await lessonDb.selectLessonById(id);
-                    ls.complete = 1;
-                    lessonDb.completeLesson(ls);
-                    setState(() {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return dialog('Great job', true, false);
-                        },
-                      );
-                    });
-                  });
-                }
-              }
-              else{
-                ListLesson tmp = lessons[0];
-                lessons.removeAt(0);
-                lessons.add(tmp);
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return dialog('baaad', false, false);
-                  },
-                );
-              }
-            });
+                ListLesson.currentAns = 0;
+              });
+            }
           },
           child: Text(
             title,
@@ -154,7 +182,7 @@ class LessonScreenState extends State<LessonScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             dialogTitle(title, isGood),
-            BottomButton(isGood: isGood, context, title: 'CONTINUE', isFinal: isFinal,),
+            BottomButton(isGood: isGood, context, title: 'Проверить', isFinal: isFinal,),
           ],
         ),
       ),

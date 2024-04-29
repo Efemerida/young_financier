@@ -46,7 +46,7 @@ class _ListLessonState extends State<ListLesson> {
             ),
           ),
         ),
-        const Spacer(),
+        //const Spacer(),
         widget.checkButton,
       ],
     );
@@ -98,12 +98,14 @@ class _ListLessonState extends State<ListLesson> {
       child: Row(
         children: [
           const Padding(padding: EdgeInsets.only(right: 15)),
+          Flexible(child:
           Text(
             question,
             style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF4B4B4B)),
+          )
           )
         ],
       ),

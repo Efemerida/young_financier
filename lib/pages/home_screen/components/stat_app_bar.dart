@@ -1,26 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const StatAppBar({Key? key}) : super(key: key);
+  StatAppBar({Key? key}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(65);
 
+
+  late final Box box;
+
+
+
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      toolbarHeight: 120,
-      backgroundColor: Colors.white,
-      elevation: 1.5,
-      title: Row(
-        children: [
-          const Padding(padding: EdgeInsets.all(20)),
-          crown(136),
-          const Padding(padding: EdgeInsets.all(20)),
-          streak(31),
-        ],
-      ),
-    );
+    box = Hive.box("name_box");
+    int? count = box.get("count");
+    print(count);
+    if(count==null) {
+      box.put("count", 0);
+      count = 1;
+    }
+
+      return AppBar(
+        toolbarHeight: 120,
+        backgroundColor: Colors.white,
+        elevation: 1.5,
+        title: Row(
+          children: [
+            const Padding(padding: EdgeInsets.all(20)),
+            streak(count),
+          ],
+        ),
+      );
+    }
   }
   Widget streak(int n) {
     return Row(
@@ -43,26 +56,6 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget crown(int n) {
-    return Row(
-      children: [
-        Image.asset(
-          'assets/images/crown.png',
-          width: 30,
-        ),
-        const Padding(
-          padding: EdgeInsets.all(4),
-        ),
-        Text(
-          '$n',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFFFC800),
-          ),
-        )
-      ],
-    );
-  }
 
   Widget flag() {
     return Container(
@@ -83,4 +76,4 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: null /* add child content here */,
     );
   }
-}
+
