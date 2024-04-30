@@ -18,7 +18,7 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
     int? count = box.get("count");
     if(count==null) {
       box.put("count", 0);
-      count = 1;
+      count = 0;
     }
 
       return AppBar(
