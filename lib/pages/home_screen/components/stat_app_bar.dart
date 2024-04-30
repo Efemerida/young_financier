@@ -55,24 +55,3 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-
-  Widget flag() {
-    return Container(
-      margin: const EdgeInsets.only(left: 15, top: 18, bottom: 18),
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-          fit: BoxFit.scaleDown,
-          image: AssetImage('assets/images/korea-flag-transparent.png'),
-          // fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          width: 2.5,
-          color: const Color(0xFFE5E5E5),
-        ),
-        color: Colors.grey.shade100,
-      ),
-      child: null /* add child content here */,
-    );
-  }
-
