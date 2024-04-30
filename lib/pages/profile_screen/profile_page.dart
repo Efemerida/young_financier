@@ -51,9 +51,7 @@ class _ProfilePageSate extends State<ProfilePage>{
         body: ValueListenableBuilder(
           valueListenable: box.listenable(),
             builder: (context, Box box, widget){
-              if(box.isEmpty){
-                box.put("name", "Neo");
-              }
+            box.put("name", "Neo");
             return Center(
                 child:
                 Column(

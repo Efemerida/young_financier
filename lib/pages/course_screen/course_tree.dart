@@ -38,7 +38,8 @@ class _CourseTree extends State<CourseTree> {
       // await lessonDb.deleteAllData();
 
       lessons = await lessonDb.selectLessons();
-      if(lessons==null) {
+      print(lessons);
+      if(lessons!.isEmpty) {
         ByteData bytes1 = await rootBundle.load("assets/images/intro.png");
         lessonDb.insertLesson(Lesson(name: "Введение",
             complete: 0,
