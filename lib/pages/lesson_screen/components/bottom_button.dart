@@ -5,7 +5,7 @@ class BottomButton extends StatelessWidget {
   final String title;
   final bool isGood;
   final bool isFinal;
-  BottomButton(this.context, {required this.isGood, required this.title, required this.isFinal, Key? key}) : super(key: key);
+  const BottomButton(this.context, {required this.isGood, required this.title, required this.isFinal, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +26,19 @@ class BottomButton extends StatelessWidget {
               Navigator.pop(context);
             }
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: color,
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
           child: Text(
             title,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
-            ),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: color,
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
             ),
           ),
         ),

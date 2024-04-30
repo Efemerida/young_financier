@@ -1,11 +1,8 @@
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:young_financier/models/Lesson.dart';
-import 'package:young_financier/models/LessonQuestion.dart';
-import 'package:young_financier/repositories/db_helpers/LessonDatabaseHelper.dart';
+import 'package:young_financier/models/lesson.dart';
+import 'package:young_financier/models/lesson_question.dart';
+import 'package:young_financier/repositories/db_helpers/lesson_database_helper.dart';
 
 import 'components/course_node.dart';
 
@@ -13,7 +10,7 @@ import 'components/course_node.dart';
 
 class CourseTree extends StatefulWidget{
 
-  CourseTree({super.key});
+  const CourseTree({super.key});
 
   @override
   State<StatefulWidget> createState() => _CourseTree();
@@ -24,14 +21,22 @@ class CourseTree extends StatefulWidget{
 class _CourseTree extends State<CourseTree> {
 
   late LessonDatabaseHelper lessonDb;
-  List<Lesson>? lessons = null;
+  List<Lesson>? lessons;
 
 
 
-  void initData(){
+
+
+  @override
+  void initState() {
+    super.initState();
+
+
+
     this.lessonDb = LessonDatabaseHelper();
     this.lessonDb.initDB().whenComplete(() async {
-      // await lessonDb.dropDB();
+      // await lessonDb.deleteAllData();
+
       lessons = await lessonDb.selectLessons();
       if(lessons==null) {
         ByteData bytes1 = await rootBundle.load("assets/images/intro.png");
@@ -247,40 +252,32 @@ class _CourseTree extends State<CourseTree> {
             lesson_id: lessons![4].id!));
       }
       setState(() {});
-    });
-
+    }
+    );
   }
 
-
-  @override
-  void initState() {
-    super.initState();
-
-    initData();
-
-  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: this.lessonDb.selectLessons(),
+        future: lessonDb.selectLessons(),
         builder: (BuildContext context, AsyncSnapshot<List<Lesson>> snapshot){
     if (snapshot.hasData && lessons!=null) {
       return ListView.builder(
           itemCount: snapshot.data?.length,
           itemBuilder: (context, position) {
-            return Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            return Padding(padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: CourseNode(
               id: lessons![position].id!,
               snapshot.data![position].name,
               image: snapshot.data![position].picture,
               isComplete:snapshot.data![position].complete,
-              color: snapshot.data![position].complete==1? Color(0xFF12AB1B) : Color(0xFFCE82FF),
+              color: snapshot.data![position].complete==1? const Color(0xFF12AB1B) : const Color(0xFFCE82FF),
             ));
           });
     }
     else {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
         });

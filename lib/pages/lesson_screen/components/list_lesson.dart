@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:young_financier/models/LessonQuestion.dart';
+import 'package:young_financier/models/lesson_question.dart';
 
 class ListLesson extends StatefulWidget {
   LessonQuestion lessonQuestion;
@@ -8,7 +8,7 @@ class ListLesson extends StatefulWidget {
 
 
 
-  ListLesson({required this.lessonQuestion, required this.checkButton, Key? key}) : super(key: key);
+  ListLesson({required this.lessonQuestion, required this.checkButton, super.key});
 
   @override
   State<ListLesson> createState() => _ListLessonState();

@@ -16,7 +16,6 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     box = Hive.box("name_box");
     int? count = box.get("count");
-    print(count);
     if(count==null) {
       box.put("count", 0);
       count = 1;

@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:young_financier/pages/home_screen/home_screen.dart';
-import 'package:young_financier/pages/map_page.dart';
-import 'package:young_financier/pages/profile_page.dart';
+import 'package:young_financier/pages/profile_screen/profile_page.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -19,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -30,7 +27,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title});
 
 
 
@@ -42,14 +39,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
 
   int _selectedIndex = 0;
 
   final List _pages =[
 
-    HomeScreen(),
+    const HomeScreen(),
 
     ProfilePage()
 
@@ -59,12 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void _navigateBottomBar(int index){
     setState(() {
       _selectedIndex = index;
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
     });
   }
 

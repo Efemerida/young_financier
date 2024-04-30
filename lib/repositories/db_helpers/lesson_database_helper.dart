@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:young_financier/models/Lesson.dart';
 
-import '../../models/LessonQuestion.dart';
+import 'package:young_financier/models/lesson.dart';
+import '../../models/lesson_question.dart';
 
 class LessonDatabaseHelper {
   static final LessonDatabaseHelper _lessonDatabaseHelper = LessonDatabaseHelper
@@ -87,9 +87,11 @@ class LessonDatabaseHelper {
 
   Future<void> deleteAllData() async{
     db.rawDelete("delete from lessons");
+    db.rawDelete("delete from lesson_questions");
   }
 
   Future<void> completeLesson(Lesson lesson) async{
-    db.update("lessons", lesson.toMap());
+    db.rawUpdate("update lessons set complete = ${lesson.complete} "
+        "where id = ${lesson.id}");
   }
 }

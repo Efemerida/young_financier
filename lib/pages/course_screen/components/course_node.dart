@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -16,8 +15,7 @@ class CourseNode extends StatelessWidget {
 
 
   CourseNode(this.name,
-      {this.image, this.color, required this.id, required this.isComplete, Key? key})
-      : super(key: key);
+      {this.image, this.color, required this.id, required this.isComplete, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +67,8 @@ class CourseNode extends StatelessWidget {
         lineWidth: 10.0,
         percent: 1,
         circularStrokeCap: CircularStrokeCap.round,
-        progressColor: const Color(0xc0c0c0),
-        backgroundColor: isComplete == 1? Color(0xFF12AB1B) : Color(0x737373FF),
+        progressColor: const Color(0x00c0c0c0),
+        backgroundColor: isComplete == 1? const Color(0xFF12AB1B) : const Color(0x737373FF),
       ),
     );
   }

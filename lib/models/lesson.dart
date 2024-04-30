@@ -10,8 +10,6 @@ class Lesson{
   Lesson({this.id, required this.name, required this.complete, required this.picture});
 
 
-
-
   Lesson.fromMap(Map<String, dynamic> res)
       : id = res["id"],
         name = res["name"],

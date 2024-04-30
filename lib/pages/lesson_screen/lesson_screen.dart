@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
-import 'package:young_financier/models/Lesson.dart';
-import 'package:young_financier/models/LessonQuestion.dart';
-import 'package:young_financier/repositories/db_helpers/LessonDatabaseHelper.dart';
+import 'package:young_financier/models/lesson.dart';
+import 'package:young_financier/models/lesson_question.dart';
+import 'package:young_financier/repositories/db_helpers/lesson_database_helper.dart';
 
 import 'components/bottom_button.dart';
-import 'components/final_bottom_button.dart';
-import 'components/grid_lesson.dart';
 import 'components/lesson_app_bar.dart';
 import 'components/list_lesson.dart';
 
 class LessonScreen extends StatefulWidget {
 
   int id;
-  LessonScreen({required this.id, Key? key}) : super(key: key);
+  LessonScreen({required this.id, super.key});
 
 
   @override
@@ -105,6 +103,15 @@ class LessonScreenState extends State<LessonScreen> {
                       }
                     }
 
+                    lessonDb.selectLessonById(id).whenComplete(() async {
+                      Lesson ls = await lessonDb.selectLessonById(id);
+                      ls.complete = 1;
+                      ByteData bytes = await rootBundle.load(
+                          "assets/images/ant.png");
+                      ls.picture = bytes.buffer.asUint8List();
+                      lessonDb.completeLesson(ls);
+                    });
+
 
                     showDialog(
                       context: context,
@@ -115,14 +122,8 @@ class LessonScreenState extends State<LessonScreen> {
                   }
                   else {
                     lessons.removeAt(0);
-                    print(countCorrect);
                     percent += countCorrect;
-                    lessonDb.selectLessonById(id).whenComplete(() async {
-                      Lesson ls = await lessonDb.selectLessonById(id);
-                      ls.complete = 1;
-                      ByteData bytes = await rootBundle.load("assets/images/ant.png");
-                      ls.picture = bytes.buffer.asUint8List();
-                      lessonDb.completeLesson(ls);
+
                       setState(() {
                         showDialog(
                           context: context,
@@ -131,7 +132,6 @@ class LessonScreenState extends State<LessonScreen> {
                           },
                         );
                       });
-                    });
                   }
                 }
                 else {
@@ -149,6 +149,13 @@ class LessonScreenState extends State<LessonScreen> {
               });
             }
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF58CC02),
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
           child: Text(
             title,
             style: const TextStyle(
@@ -157,21 +164,14 @@ class LessonScreenState extends State<LessonScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF58CC02),
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
         ),
       ),
     );
   }
 
   dialog(String title, bool isGood, bool isFinal) {
-    Color color = Color(0xFFd7ffb8);
-    if(!isGood) color = Color(0xffe37676);
+    Color color = const Color(0xFFd7ffb8);
+    if(!isGood) color = const Color(0xffe37676);
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(

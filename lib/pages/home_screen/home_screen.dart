@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: StatAppBar(),
-      body: CourseTree(),
+      body: const CourseTree(),
       );
   }
 
