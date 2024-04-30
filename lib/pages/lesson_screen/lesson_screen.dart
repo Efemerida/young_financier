@@ -182,7 +182,7 @@ class LessonScreenState extends State<LessonScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             dialogTitle(title, isGood),
-            BottomButton(isGood: isGood, context, title: 'Проверить', isFinal: isFinal,),
+            BottomButton(isGood: isGood, context, title: 'Дальше', isFinal: isFinal,),
           ],
         ),
       ),

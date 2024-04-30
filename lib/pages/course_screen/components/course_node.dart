@@ -12,10 +12,11 @@ class CourseNode extends StatelessWidget {
   Color? color;
   int isComplete;
   int id;
+  final Function() onUpdate;
 
 
   CourseNode(this.name,
-      {this.image, this.color, required this.id, required this.isComplete, super.key});
+      {required this.onUpdate,this.image, this.color, required this.id, required this.isComplete, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,11 @@ class CourseNode extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => LessonScreen(id:id),
               ),
-            );
+            ).then((result) {
+
+                onUpdate();
+
+            });;
           },
           child: node(),
         ),

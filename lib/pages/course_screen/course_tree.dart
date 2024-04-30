@@ -256,7 +256,11 @@ class _CourseTree extends State<CourseTree> {
     }
     );
   }
+  void updateParentData() {
+    setState(() {
 
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -274,6 +278,7 @@ class _CourseTree extends State<CourseTree> {
               image: snapshot.data![position].picture,
               isComplete:snapshot.data![position].complete,
               color: snapshot.data![position].complete==1? const Color(0xFF12AB1B) : const Color(0xFFCE82FF),
+              onUpdate: updateParentData,
             ));
           });
     }
